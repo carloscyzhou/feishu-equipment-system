@@ -1,0 +1,34 @@
+services:
+  backend:
+    image: carloszhou/feishu-equipment-mgmt-backend:latest
+    container_name: feishu-equipment-backend
+    restart: unless-stopped
+    environment:
+      - PORT=8001
+      - FEISHU_APP_ID=your_feishu_app_id
+      - FEISHU_APP_SECRET=5nq3ECouyOGgIUeMmL1CAeKbWLlqVP5B
+    expose:
+      - "8001"
+    volumes:
+      - ./equipment.db:/app/equipment.db
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    image: carloszhou/feishu-equipment-mgmt-frontend:latest
+    container_name: feishu-equipment-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    environment:
+      - API_UPSTREAM=http://backend:8001
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
