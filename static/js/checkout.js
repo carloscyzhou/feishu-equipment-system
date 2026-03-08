@@ -350,7 +350,7 @@ async function loadUserInfo() {
 function getAuthCode() {
     return new Promise((resolve, reject) => {
         tt.requestAccess({
-            appID: 'your_feishu_app_id',
+            appID: 'cli_xxx',
             success: (res) => resolve(res.code),
             fail: (err) => reject(err)
         });

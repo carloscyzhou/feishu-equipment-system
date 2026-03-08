@@ -79,9 +79,9 @@ equipment-management/
 
 ### 1. 应用配置
 
-**已提供凭证：**
-- APP_ID: `your_feishu_app_id`
-- APP_SECRET: `5nq3ECouyOGgIUeMmL1CAeKbWLlqVP5B`
+**凭证配置方式：**
+- APP_ID: 使用你在飞书开放平台申请的 `App ID`
+- APP_SECRET: 使用你在飞书开放平台申请的 `App Secret`
 
 **需要在飞书开放平台配置：**
 1. 登录 [飞书开放平台](https://open.feishu.cn/)
@@ -153,7 +153,7 @@ async function getAuthCode() {
     return new Promise((resolve, reject) => {
         window.h5sdk.ready(() => {
             tt.requestAccess({
-                appID: 'your_feishu_app_id',
+                appID: 'cli_xxx',
                 success: (res) => resolve(res.code),
                 fail: (err) => reject(err)
             });
