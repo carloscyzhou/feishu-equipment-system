@@ -1,213 +1,168 @@
 # 飞书器材出入库管理系统
 
-基于飞书免登录能力的器材出入库管理 Web 应用，支持在飞书客户端内自动识别用户身份，实现器材的分类管理、扫码出入库、操作日志追踪等功能。
+基于飞书免登录能力的器材出入库管理 Web 应用，支持器材管理、批量出入库/分配/交接、操作日志追踪与 Excel 导出。
 
-## ✨ 功能特性
+仓库地址：
+`https://github.com/carloscyzhou/feishu-equipment-system.git`
 
-- **🔐 飞书免登录** - 集成飞书 JSAPI，自动识别用户身份
-- **📦 器材管理** - 分类管理器材，支持自定义分类和器材信息
-- **📱 扫码出入库** - 支持飞书扫码和手动输入条码
-- **📝 操作日志** - 完整的出入库记录和操作追踪
-- **📊 数据导出** - 支持导出器材清单和操作日志为 Excel
-- **🐳 Docker 部署** - 一键部署，支持前后端分离
+## 功能概览
+- 飞书免登录：在飞书客户端内自动识别用户身份。
+- 设备管理：分类、型号、设备实例管理。
+- 设备流转：支持出库、分配、交接、入库。
+- 操作日志：支持筛选、分页、时区展示、Excel 导出。
+- 容器化部署：支持 Docker Compose 与纯 Docker 快速部署。
 
-## 🏗️ 技术架构
+## 技术栈
+- 前端：React + TypeScript + Vite + Tailwind CSS
+- 后端：FastAPI + SQLAlchemy (async)
+- 数据库：SQLite
+- 认证：飞书 JSAPI
+- 部署：Docker / Docker Compose
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        飞书客户端                           │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │   器材管理   │  │   出入库    │  │      操作日志        │  │
-│  │   页面      │  │   页面      │  │      页面           │  │
-│  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘  │
-└─────────┼────────────────┼────────────────────┼─────────────┘
-          │                │                    │
-          └────────────────┴────────────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  React 前端  │
-                    │  (Vite)     │
-                    └──────┬──────┘
-                           │ HTTP/API
-                    ┌──────▼──────┐
-                    │   FastAPI   │
-                    │    后端      │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │   SQLite    │
-                    │   数据库    │
-                    └─────────────┘
+## 目录结构
+```text
+.
+├── main.py
+├── database.py
+├── config.py
+├── feishu_auth.py
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── frontend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── src/
+└── CHANGELOG-2026-03-08.md
 ```
 
-### 技术栈
+## 本地开发启动
 
-| 层级 | 技术 | 说明 |
-|------|------|------|
-| 前端 | React + TypeScript + Vite + Tailwind CSS | 现代化前端技术栈 |
-| 后端 | FastAPI | Python 高性能异步 Web 框架 |
-| 数据库 | SQLite | 轻量级本地数据库 |
-| 认证 | 飞书 JSAPI | 免登录 + 扫码能力 |
-| 部署 | Docker + Docker Compose | 容器化部署 |
-
-## 📁 项目结构
-
-```
-feishu-equipment-mgmt/
-├── main.py                 # FastAPI 应用入口
-├── database.py            # 数据库模型和操作
-├── config.py              # 配置管理
-├── feishu_auth.py         # 飞书认证模块
-├── check_session.py       # 会话检查工具
-├── requirements.txt       # Python 依赖
-├── manage.sh              # 管理脚本
-├── Dockerfile             # 后端 Dockerfile
-├── docker-compose.yml     # Docker Compose 配置
-├── .env                   # 环境变量（需自行创建）
-├── static/                # 静态资源（备用前端）
-│   ├── css/
-│   └── js/
-└── frontend/              # React 前端
-    ├── src/
-    │   ├── components/    # 组件
-    │   ├── pages/         # 页面
-    │   ├── hooks/         # 自定义 Hooks
-    │   └── utils/         # 工具函数
-    ├── package.json
-    ├── tsconfig.json
-    └── vite.config.ts
-```
-
-## 🚀 快速开始
-
-### 环境要求
-
-- Python 3.9+
-- Node.js 18+
-- Docker（可选）
-
-### 1. 克隆项目
-
+### 1. 克隆代码
 ```bash
-git clone <repository-url>
-cd feishu-equipment-mgmt
+git clone https://github.com/carloscyzhou/feishu-equipment-system.git
+cd feishu-equipment-system
 ```
 
-### 2. 配置环境变量
-
-创建 `.env` 文件：
-
+### 2. 后端启动
 ```bash
-cp .env.example .env
-```
-
-编辑 `.env` 文件，填入你的飞书应用凭证：
-
-```env
-FEISHU_APP_ID=your_app_id
-FEISHU_APP_SECRET=your_app_secret
-DATABASE_URL=sqlite+aiosqlite:///./equipment.db
-DEBUG=false
-HOST=0.0.0.0
-```
-
-> 💡 在 [飞书开放平台](https://open.feishu.cn/) 创建应用获取凭证
-
-### 3. 运行方式一：本地开发
-
-**启动后端：**
-
-```bash
-# 创建虚拟环境
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 安装依赖
 pip install -r requirements.txt
 
-# 启动后端
+# 配置飞书参数（也可写入 .env）
+export FEISHU_APP_ID=your_app_id
+export FEISHU_APP_SECRET=your_app_secret
+
 python main.py
-# 或使用 manage.sh
-./manage.sh start
 ```
 
-**启动前端（开发模式）：**
+后端默认监听 `0.0.0.0:8001`。
 
+### 3. 前端启动
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### 4. 运行方式二：Docker 部署
+前端默认监听 `0.0.0.0:8000`，并通过 Vite 代理 `/api` 到后端。
 
+## Docker Compose 快速部署（推荐）
+
+### 1. 准备与修改配置
+项目内已提供 `docker-compose.yml`，默认使用以下镜像：
+- `carloszhou/feishu-equipment-mgmt-backend:latest`
+- `carloszhou/feishu-equipment-mgmt-frontend:latest`
+
+部署前请编辑 `docker-compose.yml` 中 `backend.environment`：
+- `FEISHU_APP_ID`
+- `FEISHU_APP_SECRET`
+
+### 2. 拉取并启动
 ```bash
-# 构建并启动
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
-
-# 停止
-docker-compose down
+docker compose pull
+docker compose up -d
 ```
 
-## ⚙️ 飞书应用配置
-
-1. 登录 [飞书开放平台](https://open.feishu.cn/)
-2. 创建企业自建应用
-3. 开启"网页应用"能力
-4. 设置首页地址：`http://your-domain`
-5. 添加权限：
-   - `contact:user.base` - 获取用户基本信息
-   - `contact:user.phone` - 获取用户手机号（可选）
-6. 发布应用并获取 **App ID** 和 **App Secret**
-
-## 📖 使用指南
-
-### 器材管理
-
-- 创建分类：在器材管理页面添加器材分类
-- 添加器材：填写器材名称、规格、存放位置等信息
-- 生成条码：系统自动为每件器材生成唯一条码
-
-### 出入库操作
-
-1. 进入"出入库"页面
-2. 选择操作类型（入库/出库/借出/归还）
-3. 扫描器材条码或手动输入
-4. 填写操作人和备注
-5. 确认提交
-
-### 操作日志
-
-- 查看所有出入库记录
-- 按时间、操作人、器材筛选
-- 导出日志为 Excel
-
-## 🔧 管理脚本
-
+### 3. 查看状态与日志
 ```bash
-./manage.sh start      # 启动服务
-./manage.sh stop       # 停止服务
-./manage.sh restart    # 重启服务
-./manage.sh status     # 查看状态
-./manage.sh logs       # 查看日志
-./manage.sh backup     # 备份数据库
+docker compose ps
+docker compose logs -f
 ```
 
-## 📝 更新日志
+### 4. 升级到最新版本
+```bash
+docker compose pull
+docker compose up -d --force-recreate
+```
 
-详见 [CHANGELOG-2026-03-08.md](./CHANGELOG-2026-03-08.md)
+### 5. 停止与清理
+```bash
+docker compose down
+```
 
-## 🤝 贡献
+## Docker 快速部署（不使用 Compose）
 
-欢迎提交 Issue 和 Pull Request！
+### 1. 创建网络与数据库文件
+```bash
+docker network create feishu-equipment-net
+touch equipment.db
+```
 
-## 📄 许可证
+### 2. 启动后端容器
+```bash
+docker run -d \
+  --name feishu-equipment-backend \
+  --network feishu-equipment-net \
+  -e PORT=8001 \
+  -e FEISHU_APP_ID=your_app_id \
+  -e FEISHU_APP_SECRET=your_app_secret \
+  -v "$(pwd)/equipment.db:/app/equipment.db" \
+  carloszhou/feishu-equipment-mgmt-backend:latest
+```
 
-[MIT License](./LICENSE)
+### 3. 启动前端容器
+```bash
+docker run -d \
+  --name feishu-equipment-frontend \
+  --network feishu-equipment-net \
+  -p 80:80 \
+  -e API_UPSTREAM=http://feishu-equipment-backend:8001 \
+  carloszhou/feishu-equipment-mgmt-frontend:latest
+```
 
----
+### 4. 升级容器
+```bash
+docker pull carloszhou/feishu-equipment-mgmt-backend:latest
+docker pull carloszhou/feishu-equipment-mgmt-frontend:latest
 
-> 🔔 **提示**：本项目需要飞书企业账号才能完整使用免登录功能。个人开发者可以在飞书开放平台创建测试应用进行开发。
+docker rm -f feishu-equipment-frontend feishu-equipment-backend
+# 按上面的 docker run 命令重新启动
+```
+
+## 飞书应用配置要点
+- 登录飞书开放平台创建企业自建应用。
+- 开启网页应用能力，配置可访问域名（建议 HTTPS）。
+- 添加最小权限：`contact:user.base`。
+- 访问失败时优先检查：域名白名单、协议（HTTP/HTTPS）、端口。
+
+## 常用维护命令
+```bash
+# 查看后端日志
+docker logs -f feishu-equipment-backend
+
+# 查看前端日志
+docker logs -f feishu-equipment-frontend
+
+# 本地数据库备份
+cp equipment.db "equipment-$(date +%Y%m%d-%H%M%S).db"
+```
+
+## 更新日志
+- [CHANGELOG-2026-03-08.md](./CHANGELOG-2026-03-08.md)
+
+## 前端说明
+- 详见 [frontend/README.md](./frontend/README.md)
