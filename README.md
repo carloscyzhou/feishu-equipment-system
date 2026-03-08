@@ -145,9 +145,8 @@ docker rm -f feishu-equipment-frontend feishu-equipment-backend
 
 ## 飞书应用配置要点
 - 登录飞书开放平台创建企业自建应用。
-- 开启网页应用能力，配置可访问域名（建议 HTTPS）。
-- 添加最小权限：`contact:user.base`。
-- 访问失败时优先检查：域名白名单、协议（HTTP/HTTPS）、端口。
+- 添加权限和域名至安全设置。
+- 访问失败时优先检查：域名安全设置、协议（HTTP/HTTPS）、端口。
 
 ## 常用维护命令
 ```bash
