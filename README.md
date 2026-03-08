@@ -70,6 +70,27 @@ npm run dev
 
 前端默认监听 `0.0.0.0:8000`，并通过 Vite 代理 `/api` 到后端。
 
+## manage.sh 管理命令
+
+项目根目录提供了 `manage.sh`，用于本地一键管理前后端进程与日志。
+
+```bash
+./manage.sh start          # 启动前端(8000)和后端(8001)
+./manage.sh stop           # 停止前后端
+./manage.sh restart        # 重启前后端
+./manage.sh status         # 查看运行状态
+./manage.sh logs           # 查看后端实时日志
+./manage.sh logs-frontend  # 查看前端实时日志
+./manage.sh rotate-logs    # 手动执行一次日志轮转检查
+./manage.sh init           # 初始化数据库
+./manage.sh help           # 查看帮助
+```
+
+说明：
+- 会自动读取项目根目录 `.env` 中的 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`。
+- 如未检测到 `venv`，脚本会自动创建并安装后端依赖。
+- 日志轮转参数可通过环境变量覆盖：`LOG_MAX_SIZE_MB`、`LOG_KEEP_COUNT`、`LOG_CHECK_INTERVAL`。
+
 ## Docker Compose 快速部署（推荐）
 
 ### 1. 准备与修改配置
